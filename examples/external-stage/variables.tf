@@ -1,17 +1,17 @@
-variable "warehouse_configs" {
-  description = "Map of configuration objects for Snowflake warehouses"
+variable "stage_configs" {
+  description = "Map of configuration objects for Snowflake stages"
   type = map(object({
-    name                      = string
-    warehouse_size            = optional(string, "X-SMALL")
-    warehouse_type            = optional(string, "STANDARD")
-    auto_resume               = optional(bool, true)
-    auto_suspend              = optional(number, 60)
-    initially_suspended       = optional(bool, true)
-    min_cluster_count         = optional(number, 1)
-    max_cluster_count         = optional(number, 1)
-    scaling_policy            = optional(string, "STANDARD")
-    enable_query_acceleration = optional(bool, false)
-    comment                   = optional(string, null)
+    name                = string
+    database            = string
+    schema              = string
+    url                 = optional(string, null)
+    storage_integration = optional(string, null)
+    credentials         = optional(string, null)
+    encryption          = optional(string, null)
+    file_format         = optional(string, null)
+    copy_options        = optional(string, null)
+    directory           = optional(string, null)
+    comment             = optional(string, null)
   }))
   default = {}
 }

@@ -1,7 +1,7 @@
 {
-    "name": "terraform-snowflake-warehouse",
+    "name": "terraform-snowflake-stage",
     "version": "0.0.0",
-    "description": "Terraform module for creating and managing Snowflake warehouses with Semantic Release support.",
+    "description": "Terraform module for creating and managing Snowflake stages (internal and external) with Semantic Release support.",
     "license": "MIT",
     "scripts": {
         "release": "semantic-release"
@@ -20,16 +20,18 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse.git"
+        "url": "git+https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage.git"
     },
     "keywords": [
         "terraform",
         "snowflake",
-        "warehouse",
+        "stage",
+        "internal-stage",
+        "external-stage",
         "infrastructure-as-code"
     ],
     "bugs": {
-        "url": "https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse/issues"
+        "url": "https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/issues"
     },
-    "homepage": "https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse#readme"
+    "homepage": "https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage#readme"
 }

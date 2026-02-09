@@ -1,101 +1,139 @@
-# Terraform Snowflake Module - Warehouse
+# Terraform Snowflake Module - Stage
 
-![Release](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse/actions/workflows/ci.yaml/badge.svg)&nbsp;![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?logo=snowflake&logoColor=white)&nbsp;![Commit Activity](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse)&nbsp;![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse)&nbsp;![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse)&nbsp;![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse)&nbsp;![File Count](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse)&nbsp;![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse)&nbsp;![Top Language](https://img.shields.io/github/languages/top/subhamay-bhattacharyya-tf/terraform-snowflake-warehouse)&nbsp;![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/73bb06aedb3721ff9a98cfe96f71647a/raw/terraform-snowflake-warehouse.json?)
+![Release](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/actions/workflows/ci.yaml/badge.svg)&nbsp;![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?logo=snowflake&logoColor=white)&nbsp;![Commit Activity](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![File Count](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Top Language](https://img.shields.io/github/languages/top/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/73bb06aedb3721ff9a98cfe96f71647a/raw/terraform-snowflake-stage.json?)
 
-A Terraform module for creating and managing Snowflake warehouses using a map of configuration objects. Supports creating single or multiple warehouses with a single module call.
+A Terraform module for creating and managing Snowflake stages using a map of configuration objects. Supports both internal and external stages (S3, GCS, Azure) with a single module call.
 
 ## Features
 
-- Map-based configuration for creating single or multiple warehouses
+- Map-based configuration for creating single or multiple stages
+- Support for internal stages (Snowflake-managed storage)
+- Support for external stages (S3, GCS, Azure)
+- Storage integration support for secure cloud access
 - Built-in input validation with descriptive error messages
 - Sensible defaults for optional properties
-- Outputs keyed by warehouse identifier for easy reference
-- Support for all Snowflake warehouse sizes and configurations
+- Outputs keyed by stage identifier for easy reference
+- File format and copy options configuration
 
 ## Usage
 
-### Single Warehouse
+### Internal Stage
 
 ```hcl
-module "warehouse" {
-  source = "path/to/modules/snowflake-warehouse"
+module "stage" {
+  source = "path/to/modules/snowflake-stage"
 
-  warehouse_configs = {
-    "my_warehouse" = {
-      name                      = "MY_WAREHOUSE"
-      warehouse_size            = "X-SMALL"
-      warehouse_type            = "STANDARD"
-      auto_resume               = true
-      auto_suspend              = 60
-      initially_suspended       = true
-      min_cluster_count         = 1
-      max_cluster_count         = 1
-      scaling_policy            = "STANDARD"
-      enable_query_acceleration = false
-      comment                   = "My test warehouse"
+  stage_configs = {
+    "my_internal_stage" = {
+      name     = "MY_INTERNAL_STAGE"
+      database = "MY_DATABASE"
+      schema   = "PUBLIC"
+      comment  = "Internal stage for data loading"
     }
   }
 }
 ```
 
-### Multiple Warehouses
+### External Stage (S3)
+
+```hcl
+module "stage" {
+  source = "path/to/modules/snowflake-stage"
+
+  stage_configs = {
+    "my_s3_stage" = {
+      name                = "MY_S3_STAGE"
+      database            = "MY_DATABASE"
+      schema              = "PUBLIC"
+      url                 = "s3://my-bucket/path/"
+      storage_integration = "MY_S3_INTEGRATION"
+      file_format         = "FORMAT_NAME = my_csv_format"
+      comment             = "External S3 stage for data ingestion"
+    }
+  }
+}
+```
+
+### External Stage (GCS)
+
+```hcl
+module "stage" {
+  source = "path/to/modules/snowflake-stage"
+
+  stage_configs = {
+    "my_gcs_stage" = {
+      name                = "MY_GCS_STAGE"
+      database            = "MY_DATABASE"
+      schema              = "PUBLIC"
+      url                 = "gcs://my-bucket/path/"
+      storage_integration = "MY_GCS_INTEGRATION"
+      comment             = "External GCS stage"
+    }
+  }
+}
+```
+
+### External Stage (Azure)
+
+```hcl
+module "stage" {
+  source = "path/to/modules/snowflake-stage"
+
+  stage_configs = {
+    "my_azure_stage" = {
+      name                = "MY_AZURE_STAGE"
+      database            = "MY_DATABASE"
+      schema              = "PUBLIC"
+      url                 = "azure://myaccount.blob.core.windows.net/container/path/"
+      storage_integration = "MY_AZURE_INTEGRATION"
+      comment             = "External Azure stage"
+    }
+  }
+}
+```
+
+### Multiple Stages
 
 ```hcl
 locals {
-  warehouses = {
-    "adhoc_wh" = {
-      name                      = "SN_TEST_ADHOC_WH"
-      warehouse_size            = "X-SMALL"
-      warehouse_type            = "STANDARD"
-      auto_resume               = true
-      auto_suspend              = 60
-      initially_suspended       = true
-      min_cluster_count         = 1
-      max_cluster_count         = 1
-      scaling_policy            = "STANDARD"
-      enable_query_acceleration = false
-      comment                   = "Development and sandbox warehouse for ad-hoc queries"
+  stages = {
+    "raw_stage" = {
+      name     = "RAW_DATA_STAGE"
+      database = "MY_DATABASE"
+      schema   = "RAW"
+      comment  = "Internal stage for raw data files"
     }
-    "load_wh" = {
-      name                      = "SN_TEST_LOAD_WH"
-      warehouse_size            = "X-SMALL"
-      warehouse_type            = "STANDARD"
-      auto_resume               = true
-      auto_suspend              = 60
-      initially_suspended       = true
-      min_cluster_count         = 1
-      max_cluster_count         = 1
-      scaling_policy            = "STANDARD"
-      enable_query_acceleration = false
-      comment                   = "Dedicated ingestion warehouse for loading files"
+    "s3_ingest" = {
+      name                = "S3_INGEST_STAGE"
+      database            = "MY_DATABASE"
+      schema              = "STAGING"
+      url                 = "s3://data-lake/ingest/"
+      storage_integration = "S3_INTEGRATION"
+      file_format         = "TYPE = PARQUET"
+      comment             = "External stage for S3 data ingestion"
     }
-    "transform_wh" = {
-      name                      = "SN_TEST_TRANSFORM_WH"
-      warehouse_size            = "MEDIUM"
-      warehouse_type            = "STANDARD"
-      auto_resume               = true
-      auto_suspend              = 300
-      initially_suspended       = true
-      min_cluster_count         = 1
-      max_cluster_count         = 3
-      scaling_policy            = "STANDARD"
-      enable_query_acceleration = true
-      comment                   = "ETL/ELT warehouse for transformations"
+    "archive_stage" = {
+      name                = "ARCHIVE_STAGE"
+      database            = "MY_DATABASE"
+      schema              = "ARCHIVE"
+      url                 = "s3://data-archive/snowflake/"
+      storage_integration = "S3_INTEGRATION"
+      comment             = "External stage for archived data"
     }
   }
 }
 
-module "warehouses" {
-  source = "path/to/modules/snowflake-warehouse"
+module "stages" {
+  source = "path/to/modules/snowflake-stage"
 
-  warehouse_configs = local.warehouses
+  stage_configs = local.stages
 }
 ```
 
 ## Examples
 
-- [Basic (Single Warehouse)](examples/basic) - Create a single warehouse
-- [Multiple Warehouses](examples/multiple-warehouses) - Create multiple warehouses
+- [Internal Stage](examples/internal-stage) - Create internal Snowflake stages
+- [External Stage](examples/external-stage) - Create external stages (S3, GCS, Azure)
 
 ## Requirements
 
@@ -114,67 +152,58 @@ module "warehouses" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|----------|
-| warehouse_configs | Map of configuration objects for Snowflake warehouses | `map(object)` | `{}` | no |
+| stage_configs | Map of configuration objects for Snowflake stages | `map(object)` | `{}` | no |
 
-### warehouse_configs Object Properties
+### stage_configs Object Properties
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| name | string | - | Warehouse identifier (required) |
-| warehouse_size | string | "X-SMALL" | Size of the warehouse |
-| warehouse_type | string | "STANDARD" | Type of warehouse (STANDARD, SNOWPARK-OPTIMIZED) |
-| auto_resume | bool | true | Auto-resume when queries are submitted |
-| auto_suspend | number | 60 | Seconds of inactivity before auto-suspend |
-| initially_suspended | bool | true | Start in suspended state |
-| min_cluster_count | number | 1 | Minimum number of clusters |
-| max_cluster_count | number | 1 | Maximum number of clusters |
-| scaling_policy | string | "STANDARD" | Scaling policy (STANDARD, ECONOMY) |
-| enable_query_acceleration | bool | false | Enable query acceleration |
-| comment | string | null | Description of the warehouse |
+| name | string | - | Stage identifier (required) |
+| database | string | - | Database name (required) |
+| schema | string | - | Schema name (required) |
+| url | string | null | External stage URL (s3://, gcs://, azure://) |
+| storage_integration | string | null | Storage integration name for external stages |
+| credentials | string | null | Credentials for external stages (alternative to storage_integration) |
+| encryption | string | null | Encryption settings |
+| file_format | string | null | File format specification |
+| copy_options | string | null | Copy options for COPY INTO commands |
+| directory | string | null | Directory table settings |
+| comment | string | null | Description of the stage |
 
-### Valid Warehouse Sizes
+### Stage Types
 
-- X-SMALL (XSMALL)
-- SMALL
-- MEDIUM
-- LARGE
-- X-LARGE (XLARGE)
-- 2X-LARGE (XXLARGE, X2LARGE)
-- 3X-LARGE (XXXLARGE, X3LARGE)
-- 4X-LARGE (X4LARGE)
-- 5X-LARGE (X5LARGE)
-- 6X-LARGE (X6LARGE)
+- **Internal Stage**: No URL specified - Snowflake manages the storage
+- **External Stage**: URL specified pointing to cloud storage (S3, GCS, or Azure)
 
-### Valid Warehouse Types
+### Supported External Stage URLs
 
-- STANDARD
-- SNOWPARK-OPTIMIZED
-
-### Valid Scaling Policies
-
-- STANDARD
-- ECONOMY
+| Cloud Provider | URL Format |
+|----------------|------------|
+| AWS S3 | `s3://bucket-name/path/` |
+| Google Cloud Storage | `gcs://bucket-name/path/` |
+| Azure Blob Storage | `azure://account.blob.core.windows.net/container/path/` |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| warehouse_names | Map of warehouse names keyed by identifier |
-| warehouse_fully_qualified_names | Map of fully qualified warehouse names |
-| warehouse_sizes | Map of warehouse sizes |
-| warehouse_states | Map of warehouse states (STARTED or SUSPENDED) |
-| warehouses | All warehouse resources |
+| stage_names | Map of stage names keyed by identifier |
+| stage_fully_qualified_names | Map of fully qualified stage names |
+| stage_databases | Map of databases containing the stages |
+| stage_schemas | Map of schemas containing the stages |
+| stage_urls | Map of external stage URLs (null for internal) |
+| stage_types | Map of stage types (INTERNAL or EXTERNAL) |
+| stages | All stage resources |
 
 ## Validation
 
 The module validates inputs and provides descriptive error messages for:
 
-- Empty warehouse name
-- Invalid warehouse size
-- Invalid warehouse type
-- Invalid scaling policy
-- Negative auto_suspend value
-- min_cluster_count exceeding max_cluster_count
+- Empty stage name
+- Empty database name
+- Empty schema name
+- Invalid external stage URL format
+- Conflicting storage_integration and credentials
 
 ## Testing
 

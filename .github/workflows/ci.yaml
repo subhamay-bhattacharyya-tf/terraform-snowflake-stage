@@ -30,7 +30,7 @@ jobs:
     strategy:
       matrix:
         module:
-          - modules/snowflake-warehouse
+          - modules/snowflake-stage
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -64,8 +64,8 @@ jobs:
     strategy:
       matrix:
         example:
-          - examples/basic
-          - examples/multiple-warehouses
+          - examples/internal-stage
+          - examples/external-stage
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -115,14 +115,14 @@ jobs:
           go mod download
         working-directory: test
 
-      - name: Run Terratest - Single Warehouse
-        id: single-warehouse-test
+      - name: Run Terratest - Internal Stage
+        id: internal-stage-test
         run: |
           set -o pipefail
-          go test -v -timeout 30m -run TestSingleWarehouse 2>&1 | tee single_warehouse_output.txt
-          echo "## Single Warehouse Test Results" >> $GITHUB_STEP_SUMMARY
+          go test -v -timeout 30m -run TestInternalStage 2>&1 | tee internal_stage_output.txt
+          echo "## Internal Stage Test Results" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          cat single_warehouse_output.txt >> $GITHUB_STEP_SUMMARY
+          cat internal_stage_output.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
         working-directory: test
         env:
@@ -132,14 +132,14 @@ jobs:
           SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
 
-      - name: Run Terratest - Multiple Warehouses
-        id: multiple-warehouses-test
+      - name: Run Terratest - External Stage
+        id: external-stage-test
         run: |
           set -o pipefail
-          go test -v -timeout 30m -run TestMultipleWarehouses 2>&1 | tee multiple_warehouses_output.txt
-          echo "## Multiple Warehouses Test Results" >> $GITHUB_STEP_SUMMARY
+          go test -v -timeout 30m -run TestExternalStage 2>&1 | tee external_stage_output.txt
+          echo "## External Stage Test Results" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
-          cat multiple_warehouses_output.txt >> $GITHUB_STEP_SUMMARY
+          cat external_stage_output.txt >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
         working-directory: test
         env:
@@ -210,5 +210,10 @@ jobs:
 
       - name: Semantic Release
         uses: cycjimmy/semantic-release-action@v6
+        with:
+          extra_plugins: |
+            @semantic-release/changelog@6.0.3
+            @semantic-release/git@10.0.1
+            conventional-changelog-conventionalcommits@9.1.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
