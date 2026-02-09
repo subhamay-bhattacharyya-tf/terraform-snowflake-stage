@@ -15,10 +15,13 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-type WarehouseProps struct {
-	Name    string
-	Size    string
-	Comment string
+type StageProps struct {
+	Name     string
+	Database string
+	Schema   string
+	URL      string
+	Type     string
+	Comment  string
 }
 
 func openSnowflake(t *testing.T) *sql.DB {
@@ -71,10 +74,10 @@ func openSnowflake(t *testing.T) *sql.DB {
 	return db
 }
 
-func warehouseExists(t *testing.T, db *sql.DB, warehouseName string) bool {
+func stageExists(t *testing.T, db *sql.DB, database, schema, stageName string) bool {
 	t.Helper()
 
-	q := fmt.Sprintf("SHOW WAREHOUSES LIKE '%s';", escapeLike(warehouseName))
+	q := fmt.Sprintf("SHOW STAGES LIKE '%s' IN SCHEMA %s.%s;", escapeLike(stageName), database, schema)
 	rows, err := db.Query(q)
 	require.NoError(t, err)
 	defer func() { _ = rows.Close() }()
@@ -82,13 +85,10 @@ func warehouseExists(t *testing.T, db *sql.DB, warehouseName string) bool {
 	return rows.Next()
 }
 
-func fetchWarehouseProps(t *testing.T, db *sql.DB, warehouseName string) WarehouseProps {
+func fetchStageProps(t *testing.T, db *sql.DB, database, schema, stageName string) StageProps {
 	t.Helper()
 
-	// SHOW WAREHOUSES returns columns in a specific order. We need to scan all columns
-	// to get name (col 0), size (col 3), and comment (col 10 in newer versions).
-	// Using a simpler approach: query rows and scan by column name using rows.Columns()
-	q := fmt.Sprintf("SHOW WAREHOUSES LIKE '%s';", escapeLike(warehouseName))
+	q := fmt.Sprintf("SHOW STAGES LIKE '%s' IN SCHEMA %s.%s;", escapeLike(stageName), database, schema)
 	rows, err := db.Query(q)
 	require.NoError(t, err)
 	defer func() { _ = rows.Close() }()
@@ -96,23 +96,27 @@ func fetchWarehouseProps(t *testing.T, db *sql.DB, warehouseName string) Warehou
 	cols, err := rows.Columns()
 	require.NoError(t, err)
 
-	// Find column indices for name, size, comment
-	nameIdx, sizeIdx, commentIdx := -1, -1, -1
+	// Find column indices
+	nameIdx, dbIdx, schemaIdx, urlIdx, typeIdx, commentIdx := -1, -1, -1, -1, -1, -1
 	for i, col := range cols {
 		switch col {
 		case "name":
 			nameIdx = i
-		case "size":
-			sizeIdx = i
+		case "database_name":
+			dbIdx = i
+		case "schema_name":
+			schemaIdx = i
+		case "url":
+			urlIdx = i
+		case "type":
+			typeIdx = i
 		case "comment":
 			commentIdx = i
 		}
 	}
-	require.NotEqual(t, -1, nameIdx, "name column not found in SHOW WAREHOUSES output")
-	require.NotEqual(t, -1, sizeIdx, "size column not found in SHOW WAREHOUSES output")
-	require.NotEqual(t, -1, commentIdx, "comment column not found in SHOW WAREHOUSES output")
+	require.NotEqual(t, -1, nameIdx, "name column not found in SHOW STAGES output")
 
-	require.True(t, rows.Next(), "No warehouse found matching %s", warehouseName)
+	require.True(t, rows.Next(), "No stage found matching %s", stageName)
 
 	// Create slice to hold all column values
 	values := make([]interface{}, len(cols))
@@ -125,24 +129,45 @@ func fetchWarehouseProps(t *testing.T, db *sql.DB, warehouseName string) Warehou
 	require.NoError(t, err)
 
 	// Extract the values we need
-	getName := func(v interface{}) string {
-		if v == nil {
+	getValue := func(idx int) string {
+		if idx == -1 || values[idx] == nil {
 			return ""
 		}
-		if s, ok := v.(string); ok {
+		if s, ok := values[idx].(string); ok {
 			return s
 		}
-		if b, ok := v.([]byte); ok {
+		if b, ok := values[idx].([]byte); ok {
 			return string(b)
 		}
-		return fmt.Sprintf("%v", v)
+		return fmt.Sprintf("%v", values[idx])
 	}
 
-	return WarehouseProps{
-		Name:    getName(values[nameIdx]),
-		Size:    getName(values[sizeIdx]),
-		Comment: getName(values[commentIdx]),
+	return StageProps{
+		Name:     getValue(nameIdx),
+		Database: getValue(dbIdx),
+		Schema:   getValue(schemaIdx),
+		URL:      getValue(urlIdx),
+		Type:     getValue(typeIdx),
+		Comment:  getValue(commentIdx),
 	}
+}
+
+func createTestDatabase(t *testing.T, db *sql.DB, dbName string) {
+	t.Helper()
+	_, err := db.Exec(fmt.Sprintf("CREATE DATABASE IF NOT EXISTS %s", dbName))
+	require.NoError(t, err)
+}
+
+func createTestSchema(t *testing.T, db *sql.DB, dbName, schemaName string) {
+	t.Helper()
+	_, err := db.Exec(fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s.%s", dbName, schemaName))
+	require.NoError(t, err)
+}
+
+func dropTestDatabase(t *testing.T, db *sql.DB, dbName string) {
+	t.Helper()
+	_, err := db.Exec(fmt.Sprintf("DROP DATABASE IF EXISTS %s", dbName))
+	require.NoError(t, err)
 }
 
 func mustEnv(t *testing.T, key string) string {
