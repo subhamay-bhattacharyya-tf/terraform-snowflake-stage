@@ -1,3 +1,5 @@
-# Changelog
+## [unreleased]
 
-All notable changes to this project will be documented in this file.
+### 🚀 Features
+
+- Implement Snowflake stage module with internal and external stage support
