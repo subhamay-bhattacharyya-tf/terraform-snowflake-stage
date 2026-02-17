@@ -32,4 +32,5 @@ output "stage_types" {
 output "stages" {
   description = "All stage resources"
   value       = module.stage.stages
+  sensitive   = true
 }
