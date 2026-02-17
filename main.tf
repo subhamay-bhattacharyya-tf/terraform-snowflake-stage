@@ -36,11 +36,5 @@ resource "snowflake_stage_external_s3" "this" {
   # Storage integration for external stages
   storage_integration = each.value.storage_integration
 
-  # Credentials for external stages (when not using storage integration)
-  credentials = each.value.credentials
-
-  # Encryption settings
-  encryption = each.value.encryption
-
   comment = each.value.comment
 }

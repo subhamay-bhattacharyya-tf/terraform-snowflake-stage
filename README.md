@@ -124,8 +124,6 @@ module "stages" {
 | schema | string | - | Schema name (required) |
 | url | string | null | External stage URL (s3://) |
 | storage_integration | string | null | Storage integration name for external stages |
-| credentials | string | null | Credentials for external stages (alternative to storage_integration) |
-| encryption | string | null | Encryption settings |
 | comment | string | null | Description of the stage |
 
 ### Stage Types
@@ -159,8 +157,7 @@ The module validates inputs and provides descriptive error messages for:
 - Empty stage name
 - Empty database name
 - Empty schema name
-- Invalid external stage URL format
-- Conflicting storage_integration and credentials
+- Invalid external stage URL format (must start with s3://)
 
 ## Testing
 

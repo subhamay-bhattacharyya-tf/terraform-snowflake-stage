@@ -12,8 +12,6 @@ variable "stage_configs" {
     schema              = string
     url                 = optional(string, null)
     storage_integration = optional(string, null)
-    credentials         = optional(string, null)
-    encryption          = optional(string, null)
     comment             = optional(string, null)
   }))
   default = {
