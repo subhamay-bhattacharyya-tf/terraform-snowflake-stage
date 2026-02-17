@@ -13,6 +13,8 @@
 
 - *(readme)* Update custom endpoint badge URL
 - Update CHANGELOG.md [skip ci]
+- Update CHANGELOG.md [skip ci]
+- *(examples)* Mark stage outputs as sensitive
 
 ### ⚙️ Miscellaneous Tasks
 
