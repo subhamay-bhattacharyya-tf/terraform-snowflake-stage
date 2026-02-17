@@ -22,5 +22,5 @@ provider "snowflake" {
   role                     = var.snowflake_role
   authenticator            = "SNOWFLAKE_JWT"
   private_key              = var.snowflake_private_key
-  preview_features_enabled = ["snowflake_stage_resource"]
+  preview_features_enabled = ["snowflake_stage_internal_resource", "snowflake_stage_external_s3_resource"]
 }
