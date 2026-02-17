@@ -14,9 +14,6 @@ variable "stage_configs" {
     storage_integration = optional(string, null)
     credentials         = optional(string, null)
     encryption          = optional(string, null)
-    file_format         = optional(string, null)
-    copy_options        = optional(string, null)
-    directory           = optional(string, null)
     comment             = optional(string, null)
   }))
   default = {}
@@ -39,9 +36,9 @@ variable "stage_configs" {
   validation {
     condition = alltrue([
       for k, stage in var.stage_configs :
-      stage.url == null || can(regex("^(s3://|gcs://|azure://)", stage.url))
+      stage.url == null || can(regex("^s3://", stage.url))
     ])
-    error_message = "External stage URL must start with s3://, gcs://, or azure://."
+    error_message = "External stage URL must start with s3://."
   }
 
   validation {

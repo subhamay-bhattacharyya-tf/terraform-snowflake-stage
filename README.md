@@ -2,13 +2,13 @@
 
 ![Release](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/actions/workflows/ci.yaml/badge.svg)&nbsp;![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?logo=snowflake&logoColor=white)&nbsp;![Commit Activity](https://img.shields.io/github/commit-activity/t/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Last Commit](https://img.shields.io/github/last-commit/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Release Date](https://img.shields.io/github/release-date/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Repo Size](https://img.shields.io/github/repo-size/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![File Count](https://img.shields.io/github/directory-file-count/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Issues](https://img.shields.io/github/issues/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Top Language](https://img.shields.io/github/languages/top/subhamay-bhattacharyya-tf/terraform-snowflake-stage)&nbsp;![Custom Endpoint](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/bsubhamay/89743ade0aca656d28e717c9eb799f6c/raw/terraform-snowflake-stage.json?)
 
-A Terraform module for creating and managing Snowflake stages using a map of configuration objects. Supports both internal and external stages (S3, GCS, Azure) with a single module call.
+A Terraform module for creating and managing Snowflake stages using a map of configuration objects. Supports both internal and external stages (S3) with a single module call.
 
 ## Features
 
 - Map-based configuration for creating single or multiple stages
 - Support for internal stages (Snowflake-managed storage)
-- Support for external stages (S3, GCS, Azure)
+- Support for external stages (S3)
 - Storage integration support for secure cloud access
 - Built-in input validation with descriptive error messages
 - Sensible defaults for optional properties
@@ -47,7 +47,6 @@ module "stage" {
       schema              = "PUBLIC"
       url                 = "s3://my-bucket/path/"
       storage_integration = "MY_S3_INTEGRATION"
-      file_format         = "FORMAT_NAME = my_csv_format"
       comment             = "External S3 stage for data ingestion"
     }
   }
@@ -71,7 +70,6 @@ locals {
       schema              = "STAGING"
       url                 = "s3://data-lake/ingest/"
       storage_integration = "S3_INTEGRATION"
-      file_format         = "TYPE = PARQUET"
       comment             = "External stage for S3 data ingestion"
     }
     "archive_stage" = {
@@ -95,7 +93,7 @@ module "stages" {
 ## Examples
 
 - [Internal Stage](examples/internal-stage) - Create internal Snowflake stages
-- [External Stage](examples/external-stage) - Create external stages (S3, GCS, Azure)
+- [External Stage](examples/external-stage) - Create external stages (S3)
 - [Multiple Stages](examples/multiple-stages) - Create multiple stages (internal and external) in a single call
 
 ## Requirements
@@ -124,19 +122,16 @@ module "stages" {
 | name | string | - | Stage identifier (required) |
 | database | string | - | Database name (required) |
 | schema | string | - | Schema name (required) |
-| url | string | null | External stage URL (s3://, gcs://, azure://) |
+| url | string | null | External stage URL (s3://) |
 | storage_integration | string | null | Storage integration name for external stages |
 | credentials | string | null | Credentials for external stages (alternative to storage_integration) |
 | encryption | string | null | Encryption settings |
-| file_format | string | null | File format specification |
-| copy_options | string | null | Copy options for COPY INTO commands |
-| directory | string | null | Directory table settings |
 | comment | string | null | Description of the stage |
 
 ### Stage Types
 
-- **Internal Stage**: No URL specified - Snowflake manages the storage
-- **External Stage**: URL specified pointing to cloud storage (S3, GCS, or Azure)
+- **Internal Stage**: No URL specified - Snowflake manages the storage (uses `snowflake_stage_internal`)
+- **External Stage**: URL specified pointing to S3 cloud storage (uses `snowflake_stage_external_s3`)
 
 ### Supported External Stage URLs
 

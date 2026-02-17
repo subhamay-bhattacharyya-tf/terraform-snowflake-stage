@@ -34,8 +34,7 @@ output "stage_types" {
   value       = module.stage.stage_types
 }
 
-output "stages" {
-  description = "All stage resources"
-  value       = module.stage.stages
-  sensitive   = true
+output "external_stages" {
+  description = "All external S3 stage resources"
+  value       = module.stage.external_stages
 }

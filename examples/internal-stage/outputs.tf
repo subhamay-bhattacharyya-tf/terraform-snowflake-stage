@@ -29,8 +29,7 @@ output "stage_types" {
   value       = module.stage.stage_types
 }
 
-output "stages" {
-  description = "All stage resources"
-  value       = module.stage.stages
-  sensitive   = true
+output "internal_stages" {
+  description = "All internal stage resources"
+  value       = module.stage.internal_stages
 }

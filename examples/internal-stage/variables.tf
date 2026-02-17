@@ -14,9 +14,6 @@ variable "stage_configs" {
     storage_integration = optional(string, null)
     credentials         = optional(string, null)
     encryption          = optional(string, null)
-    file_format         = optional(string, null)
-    copy_options        = optional(string, null)
-    directory           = optional(string, null)
     comment             = optional(string, null)
   }))
   default = {

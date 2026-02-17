@@ -34,7 +34,6 @@ module "stages" {
       schema              = "PUBLIC"
       url                 = "s3://my-bucket/data/"
       storage_integration = "MY_S3_INTEGRATION"
-      file_format         = "TYPE = PARQUET"
       comment             = "External S3 stage for data ingestion"
     }
   }

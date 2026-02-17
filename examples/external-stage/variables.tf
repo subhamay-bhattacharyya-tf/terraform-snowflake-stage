@@ -14,9 +14,6 @@ variable "stage_configs" {
     storage_integration = optional(string, null)
     credentials         = optional(string, null)
     encryption          = optional(string, null)
-    file_format         = optional(string, null)
-    copy_options        = optional(string, null)
-    directory           = optional(string, null)
     comment             = optional(string, null)
   }))
   default = {
@@ -26,7 +23,6 @@ variable "stage_configs" {
       schema              = "PUBLIC"
       url                 = "s3://my-bucket/data/"
       storage_integration = "MY_S3_INTEGRATION"
-      file_format         = "TYPE = PARQUET"
       comment             = "External S3 stage for data ingestion"
     }
   }
