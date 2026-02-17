@@ -4,6 +4,7 @@
 
 - Convert to single-module repository layout for Snowflake stage
 - *(stages)* Separate internal and external stage resources
+- *(stages)* Add directory table support for internal and external stages
 
 ### 🚜 Refactor
 
@@ -19,6 +20,7 @@
 - Update CHANGELOG.md [skip ci]
 - Update CHANGELOG.md [skip ci]
 - *(stages)* Remove unsupported cloud providers and simplify configuration
+- Update CHANGELOG.md [skip ci]
 - Update CHANGELOG.md [skip ci]
 
 ### 🎨 Styling
