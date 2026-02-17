@@ -19,11 +19,13 @@
 - Update CHANGELOG.md [skip ci]
 - Update CHANGELOG.md [skip ci]
 - *(stages)* Remove unsupported cloud providers and simplify configuration
+- Update CHANGELOG.md [skip ci]
 
 ### 🎨 Styling
 
 - *(examples)* Align Snowflake provider config and enable stage resource
 - *(examples)* Align Snowflake provider configuration formatting
+- *(examples)* Update preview features for separated stage resources
 
 ### ⚙️ Miscellaneous Tasks
 
