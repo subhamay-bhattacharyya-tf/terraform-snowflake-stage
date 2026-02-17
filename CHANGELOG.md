@@ -15,6 +15,12 @@
 - Update CHANGELOG.md [skip ci]
 - Update CHANGELOG.md [skip ci]
 - *(examples)* Mark stage outputs as sensitive
+- Update CHANGELOG.md [skip ci]
+
+### 🎨 Styling
+
+- *(examples)* Align Snowflake provider config and enable stage resource
+- *(examples)* Align Snowflake provider configuration formatting
 
 ### ⚙️ Miscellaneous Tasks
 
