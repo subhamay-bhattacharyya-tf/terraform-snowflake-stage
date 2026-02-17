@@ -3,10 +3,16 @@
 ### 🚀 Features
 
 - Convert to single-module repository layout for Snowflake stage
+- *(stages)* Separate internal and external stage resources
+
+### 🚜 Refactor
+
+- *(stages)* Consolidate internal and external stage resources
 
 ### 📚 Documentation
 
 - *(readme)* Update custom endpoint badge URL
+- Update CHANGELOG.md [skip ci]
 
 ### ⚙️ Miscellaneous Tasks
 
