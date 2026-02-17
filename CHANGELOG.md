@@ -8,6 +8,7 @@
 ### 🚜 Refactor
 
 - *(stages)* Consolidate internal and external stage resources
+- *(stages)* Remove unsupported credentials and encryption attributes
 
 ### 📚 Documentation
 
@@ -16,6 +17,8 @@
 - Update CHANGELOG.md [skip ci]
 - *(examples)* Mark stage outputs as sensitive
 - Update CHANGELOG.md [skip ci]
+- Update CHANGELOG.md [skip ci]
+- *(stages)* Remove unsupported cloud providers and simplify configuration
 
 ### 🎨 Styling
 
