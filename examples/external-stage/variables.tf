@@ -12,6 +12,7 @@ variable "stage_configs" {
     schema              = string
     url                 = optional(string, null)
     storage_integration = optional(string, null)
+    directory_enabled   = optional(bool, false)
     comment             = optional(string, null)
   }))
   default = {

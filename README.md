@@ -124,6 +124,7 @@ module "stages" {
 | schema | string | - | Schema name (required) |
 | url | string | null | External stage URL (s3://) |
 | storage_integration | string | null | Storage integration name for external stages |
+| directory_enabled | bool | false | Enable directory table for the stage |
 | comment | string | null | Description of the stage |
 
 ### Stage Types

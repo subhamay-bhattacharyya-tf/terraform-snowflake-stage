@@ -19,6 +19,14 @@ resource "snowflake_stage_internal" "this" {
   database = each.value.database
   schema   = each.value.schema
 
+  # Directory table settings
+  dynamic "directory" {
+    for_each = each.value.directory_enabled ? [1] : []
+    content {
+      enable = true
+    }
+  }
+
   comment = each.value.comment
 }
 
@@ -35,6 +43,14 @@ resource "snowflake_stage_external_s3" "this" {
 
   # Storage integration for external stages
   storage_integration = each.value.storage_integration
+
+  # Directory table settings
+  dynamic "directory" {
+    for_each = each.value.directory_enabled ? [1] : []
+    content {
+      enable = true
+    }
+  }
 
   comment = each.value.comment
 }
