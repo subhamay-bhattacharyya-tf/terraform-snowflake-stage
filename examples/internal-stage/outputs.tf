@@ -29,7 +29,7 @@ output "stage_types" {
   value       = module.stage.stage_types
 }
 
-output "internal_stages" {
-  description = "All internal stage resources"
-  value       = module.stage.internal_stages
+output "stages" {
+  description = "All stage resources"
+  value       = module.stage.stages
 }

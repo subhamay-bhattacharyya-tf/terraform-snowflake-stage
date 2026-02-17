@@ -34,12 +34,7 @@ output "stage_types" {
   value       = module.stages.stage_types
 }
 
-output "internal_stages" {
-  description = "All internal stage resources"
-  value       = module.stages.internal_stages
-}
-
-output "external_stages" {
-  description = "All external stage resources"
-  value       = module.stages.external_stages
+output "stages" {
+  description = "All stage resources"
+  value       = module.stages.stages
 }
