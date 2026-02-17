@@ -1,71 +1,41 @@
-# External Stage Example
+# Multiple Stages Example
 
-This example demonstrates how to create external Snowflake stages using the snowflake-stage module.
+This example demonstrates how to create both internal and external Snowflake stages using a single module call.
 
 ## Overview
 
-External stages reference data files stored in external cloud storage locations:
-- AWS S3 (`s3://`)
-- Google Cloud Storage (`gcs://`)
-- Azure Blob Storage (`azure://`)
+This example creates:
+- 1 internal stage (Snowflake-managed storage)
+- 1 external stage (S3 storage)
 
-External stages require either a storage integration or credentials for authentication.
+This pattern is useful for:
+- Setting up a data pipeline with both internal and external staging areas
+- Managing different stage types in a single configuration
 
 ## Usage
 
-### S3 External Stage with Storage Integration
-
 ```hcl
-module "stage" {
+module "stages" {
   source = "../../"
 
   stage_configs = {
-    "s3_stage" = {
+    # Internal stage
+    "internal_stage" = {
+      name     = "MY_INTERNAL_STAGE"
+      database = "MY_DATABASE"
+      schema   = "PUBLIC"
+      comment  = "Internal stage for data loading"
+    }
+    
+    # External stage
+    "external_stage" = {
       name                = "MY_S3_STAGE"
       database            = "MY_DATABASE"
       schema              = "PUBLIC"
       url                 = "s3://my-bucket/data/"
       storage_integration = "MY_S3_INTEGRATION"
       file_format         = "TYPE = PARQUET"
-      comment             = "External S3 stage"
-    }
-  }
-}
-```
-
-### GCS External Stage
-
-```hcl
-module "stage" {
-  source = "../../"
-
-  stage_configs = {
-    "gcs_stage" = {
-      name                = "MY_GCS_STAGE"
-      database            = "MY_DATABASE"
-      schema              = "PUBLIC"
-      url                 = "gcs://my-bucket/data/"
-      storage_integration = "MY_GCS_INTEGRATION"
-      comment             = "External GCS stage"
-    }
-  }
-}
-```
-
-### Azure External Stage
-
-```hcl
-module "stage" {
-  source = "../../"
-
-  stage_configs = {
-    "azure_stage" = {
-      name                = "MY_AZURE_STAGE"
-      database            = "MY_DATABASE"
-      schema              = "PUBLIC"
-      url                 = "azure://myaccount.blob.core.windows.net/container/path/"
-      storage_integration = "MY_AZURE_INTEGRATION"
-      comment             = "External Azure stage"
+      comment             = "External S3 stage for data ingestion"
     }
   }
 }
@@ -73,7 +43,7 @@ module "stage" {
 
 ## Prerequisites
 
-Before creating external stages, you need:
+For external stages, you need:
 1. A storage integration configured in Snowflake
 2. Appropriate IAM roles/permissions on the cloud storage
 
@@ -112,9 +82,11 @@ terraform apply
 
 | Name | Description |
 |------|-------------|
-| stage_names | The names of the created stages |
+| stage_names | The names of all created stages |
 | stage_fully_qualified_names | The fully qualified names of the stages |
 | stage_databases | The databases containing the stages |
 | stage_schemas | The schemas containing the stages |
-| stage_urls | The URLs of external stages |
-| stage_types | The types of stages (EXTERNAL) |
+| stage_urls | The URLs of external stages (null for internal) |
+| stage_types | The types of stages (INTERNAL or EXTERNAL) |
+| internal_stages | List of internal stage names |
+| external_stages | List of external stage names |

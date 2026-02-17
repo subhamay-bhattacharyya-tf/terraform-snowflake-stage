@@ -24,6 +24,6 @@ output "stage_urls" {
 }
 
 output "stage_types" {
-  description = "The types of stages (INTERNAL or EXTERNAL)"
+  description = "The types of stages (EXTERNAL)"
   value       = module.stage.stage_types
 }

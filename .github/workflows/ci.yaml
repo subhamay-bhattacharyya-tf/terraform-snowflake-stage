@@ -8,11 +8,15 @@ on:
       - 'feature/**'
       - 'bug/**'
     paths:
-      - modules/**
+      - '*.tf'
+      - 'examples/**'
+      - 'test/**'
   pull_request:
     branches: [main]
     paths:
-      - modules/**
+      - '*.tf'
+      - 'examples/**'
+      - 'test/**'
   workflow_dispatch:
 
 permissions:
@@ -27,10 +31,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       TF_VERSION: ${{ vars.TERRAFORM_VERSION || '1.3.0' }}
-    strategy:
-      matrix:
-        module:
-          - modules/snowflake-stage
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -42,15 +42,12 @@ jobs:
 
       - name: Terraform Format Check
         run: terraform fmt -check -recursive
-        working-directory: ${{ matrix.module }}
 
       - name: Terraform Init
         run: terraform init -backend=false
-        working-directory: ${{ matrix.module }}
 
       - name: Terraform Validate
         run: terraform validate
-        working-directory: ${{ matrix.module }}
 
   # ============================================================================
   # Validate Examples
@@ -66,6 +63,7 @@ jobs:
         example:
           - examples/internal-stage
           - examples/external-stage
+          - examples/multiple-stages
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -148,11 +146,12 @@ jobs:
           SNOWFLAKE_USER: ${{ vars.SNOWFLAKE_USER }}
           SNOWFLAKE_ROLE: ${{ vars.SNOWFLAKE_ROLE }}
           SNOWFLAKE_PRIVATE_KEY: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
+          SNOWFLAKE_STORAGE_INTEGRATION: ${{ vars.SNOWFLAKE_STORAGE_INTEGRATION }}
+          SNOWFLAKE_TEST_S3_BUCKET: ${{ vars.SNOWFLAKE_TEST_S3_BUCKET }}
 
   # ============================================================================
   # Generate Change Log
   # ============================================================================
-
   generate-changelog:
     name: Generate Changelog
     runs-on: ubuntu-latest

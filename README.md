@@ -21,7 +21,7 @@ A Terraform module for creating and managing Snowflake stages using a map of con
 
 ```hcl
 module "stage" {
-  source = "path/to/modules/snowflake-stage"
+  source = "github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage"
 
   stage_configs = {
     "my_internal_stage" = {
@@ -38,7 +38,7 @@ module "stage" {
 
 ```hcl
 module "stage" {
-  source = "path/to/modules/snowflake-stage"
+  source = "github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage"
 
   stage_configs = {
     "my_s3_stage" = {
@@ -49,44 +49,6 @@ module "stage" {
       storage_integration = "MY_S3_INTEGRATION"
       file_format         = "FORMAT_NAME = my_csv_format"
       comment             = "External S3 stage for data ingestion"
-    }
-  }
-}
-```
-
-### External Stage (GCS)
-
-```hcl
-module "stage" {
-  source = "path/to/modules/snowflake-stage"
-
-  stage_configs = {
-    "my_gcs_stage" = {
-      name                = "MY_GCS_STAGE"
-      database            = "MY_DATABASE"
-      schema              = "PUBLIC"
-      url                 = "gcs://my-bucket/path/"
-      storage_integration = "MY_GCS_INTEGRATION"
-      comment             = "External GCS stage"
-    }
-  }
-}
-```
-
-### External Stage (Azure)
-
-```hcl
-module "stage" {
-  source = "path/to/modules/snowflake-stage"
-
-  stage_configs = {
-    "my_azure_stage" = {
-      name                = "MY_AZURE_STAGE"
-      database            = "MY_DATABASE"
-      schema              = "PUBLIC"
-      url                 = "azure://myaccount.blob.core.windows.net/container/path/"
-      storage_integration = "MY_AZURE_INTEGRATION"
-      comment             = "External Azure stage"
     }
   }
 }
@@ -124,7 +86,7 @@ locals {
 }
 
 module "stages" {
-  source = "path/to/modules/snowflake-stage"
+  source = "github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage"
 
   stage_configs = local.stages
 }
@@ -134,6 +96,7 @@ module "stages" {
 
 - [Internal Stage](examples/internal-stage) - Create internal Snowflake stages
 - [External Stage](examples/external-stage) - Create external stages (S3, GCS, Azure)
+- [Multiple Stages](examples/multiple-stages) - Create multiple stages (internal and external) in a single call
 
 ## Requirements
 
@@ -180,8 +143,6 @@ module "stages" {
 | Cloud Provider | URL Format |
 |----------------|------------|
 | AWS S3 | `s3://bucket-name/path/` |
-| Google Cloud Storage | `gcs://bucket-name/path/` |
-| Azure Blob Storage | `azure://account.blob.core.windows.net/container/path/` |
 
 ## Outputs
 
@@ -222,11 +183,15 @@ Required environment variables for testing:
 - `SNOWFLAKE_ROLE` - Snowflake role (e.g., "SYSADMIN")
 - `SNOWFLAKE_PRIVATE_KEY` - Snowflake private key for key-pair authentication
 
+For external stage tests:
+- `SNOWFLAKE_STORAGE_INTEGRATION` - Storage integration name
+- `SNOWFLAKE_TEST_S3_BUCKET` - S3 bucket for testing
+
 ## CI/CD Configuration
 
 The CI workflow runs on:
-- Push to `main`, `feature/**`, and `bug/**` branches (when `modules/**` changes)
-- Pull requests to `main` (when `modules/**` changes)
+- Push to `main`, `feature/**`, and `bug/**` branches (when `*.tf`, `examples/**`, or `test/**` changes)
+- Pull requests to `main` (when `*.tf`, `examples/**`, or `test/**` changes)
 - Manual workflow dispatch
 
 The workflow includes:
@@ -246,6 +211,8 @@ The CI workflow uses the following GitHub organization variables:
 | `SNOWFLAKE_ACCOUNT_NAME` | Snowflake account name | - |
 | `SNOWFLAKE_USER` | Snowflake username | - |
 | `SNOWFLAKE_ROLE` | Snowflake role (e.g., SYSADMIN) | - |
+| `SNOWFLAKE_STORAGE_INTEGRATION` | Storage integration for external stage tests | - |
+| `SNOWFLAKE_TEST_S3_BUCKET` | S3 bucket for external stage tests | - |
 
 The following GitHub secrets are required for Terratest integration tests:
 

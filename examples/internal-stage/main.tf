@@ -1,10 +1,10 @@
 # Example: Internal Snowflake Stage
 #
 # This example demonstrates how to use the snowflake-stage module
-# to create internal Snowflake stages for temporary data storage.
+# to create internal Snowflake stages (Snowflake-managed storage).
 
 module "stage" {
-  source = "../../modules/snowflake-stage"
+  source = "../../"
 
   stage_configs = var.stage_configs
 }

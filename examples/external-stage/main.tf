@@ -4,7 +4,7 @@
 # to create external Snowflake stages pointing to cloud storage (S3, GCS, Azure).
 
 module "stage" {
-  source = "../../modules/snowflake-stage"
+  source = "../../"
 
   stage_configs = var.stage_configs
 }

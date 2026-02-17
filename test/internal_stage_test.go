@@ -21,17 +21,9 @@ func TestInternalStage(t *testing.T) {
 	unique := strings.ToUpper(random.UniqueId())
 	dbName := fmt.Sprintf("TT_DB_%s", unique)
 	schemaName := "PUBLIC"
-	stageName := fmt.Sprintf("TT_INTERNAL_STAGE_%s", unique)
+	stageName := fmt.Sprintf("TT_STAGE_%s", unique)
 
 	tfDir := "../examples/internal-stage"
-
-	// Pre-create database for the test
-	db := openSnowflake(t)
-	createTestDatabase(t, db, dbName)
-	defer func() {
-		dropTestDatabase(t, db, dbName)
-		_ = db.Close()
-	}()
 
 	stageConfigs := map[string]interface{}{
 		"test_stage": map[string]interface{}{
@@ -55,14 +47,25 @@ func TestInternalStage(t *testing.T) {
 		},
 	}
 
+	// Connect to Snowflake and create test database
+	db := openSnowflake(t)
+	defer func() { _ = db.Close() }()
+
+	createTestDatabase(t, db, dbName)
+	defer dropTestDatabase(t, db, dbName)
+
+	createTestSchema(t, db, dbName, schemaName)
+
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
 	time.Sleep(retrySleep)
 
+	// Verify stage exists
 	exists := stageExists(t, db, dbName, schemaName, stageName)
 	require.True(t, exists, "Expected stage %q to exist in Snowflake", stageName)
 
+	// Verify stage properties
 	props := fetchStageProps(t, db, dbName, schemaName, stageName)
 	require.Equal(t, stageName, props.Name)
 	require.Contains(t, props.Comment, "Terratest internal stage test")
