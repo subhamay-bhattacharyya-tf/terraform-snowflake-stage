@@ -154,7 +154,8 @@ module "stages" {
 | stage_schemas | Map of schemas containing the stages |
 | stage_urls | Map of external stage URLs (null for internal) |
 | stage_types | Map of stage types (INTERNAL or EXTERNAL) |
-| stages | All stage resources |
+| internal_stages | All internal stage resources |
+| external_stages | All external stage resources |
 
 ## Validation
 

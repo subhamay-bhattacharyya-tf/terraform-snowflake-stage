@@ -35,11 +35,11 @@ output "stage_types" {
 }
 
 output "internal_stages" {
-  description = "List of internal stage names"
-  value       = [for k, v in module.stages.stage_types : module.stages.stage_names[k] if v == "INTERNAL"]
+  description = "All internal stage resources"
+  value       = module.stages.internal_stages
 }
 
 output "external_stages" {
-  description = "List of external stage names"
-  value       = [for k, v in module.stages.stage_types : module.stages.stage_names[k] if v == "EXTERNAL"]
+  description = "All external stage resources"
+  value       = module.stages.external_stages
 }
