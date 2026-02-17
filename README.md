@@ -103,13 +103,13 @@ module "stages" {
 | Name | Version |
 |------|---------|
 | terraform | >= 1.3.0 |
-| snowflake | >= 0.87.0 |
+| snowflake | >= 1.0.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| snowflake | >= 0.87.0 |
+| snowflake | >= 1.0.0 |
 
 ## Inputs
 

@@ -1,10 +1,16 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Versions
+# -----------------------------------------------------------------------------
+# Terraform and provider version constraints for the Snowflake stage module.
+# -----------------------------------------------------------------------------
+
 terraform {
   required_version = ">= 1.3.0"
 
   required_providers {
     snowflake = {
-      source  = "Snowflake-Labs/snowflake"
-      version = ">= 0.87.0"
+      source  = "snowflakedb/snowflake"
+      version = ">= 1.0.0"
     }
   }
 }

@@ -1,7 +1,9 @@
-# Example: Internal Snowflake Stage
-#
-# This example demonstrates how to use the snowflake-stage module
-# to create internal Snowflake stages (Snowflake-managed storage).
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Internal Stage Example
+# -----------------------------------------------------------------------------
+# This example demonstrates how to use the snowflake-stage module to create
+# internal Snowflake stages (Snowflake-managed storage).
+# -----------------------------------------------------------------------------
 
 module "stage" {
   source = "../../"

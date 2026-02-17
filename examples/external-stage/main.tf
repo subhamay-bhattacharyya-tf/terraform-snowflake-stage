@@ -1,7 +1,9 @@
-# Example: External Snowflake Stage
-#
-# This example demonstrates how to use the snowflake-stage module
-# to create external Snowflake stages pointing to cloud storage (S3, GCS, Azure).
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - External Stage Example
+# -----------------------------------------------------------------------------
+# This example demonstrates how to use the snowflake-stage module to create
+# external Snowflake stages pointing to cloud storage (S3, GCS, Azure).
+# -----------------------------------------------------------------------------
 
 module "stage" {
   source = "../../"

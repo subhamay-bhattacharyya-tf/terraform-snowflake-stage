@@ -1,6 +1,9 @@
-# Snowflake Stage Resource
-# Creates and manages one or more Snowflake stages based on the stage_configs map
-# Supports both internal and external stages (S3, GCS, Azure)
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Main
+# -----------------------------------------------------------------------------
+# Creates and manages one or more Snowflake stages based on the stage_configs
+# map. Supports both internal and external stages (S3, GCS, Azure).
+# -----------------------------------------------------------------------------
 
 resource "snowflake_stage" "this" {
   for_each = var.stage_configs

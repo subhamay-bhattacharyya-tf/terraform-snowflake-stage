@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Multiple Stages Example - Variables
+# -----------------------------------------------------------------------------
+# Input variables for the multiple stages example.
+# -----------------------------------------------------------------------------
+
 variable "stage_configs" {
   description = "Map of configuration objects for Snowflake stages"
   type = map(object({

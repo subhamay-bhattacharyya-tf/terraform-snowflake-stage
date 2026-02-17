@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - External Stage Example - Outputs
+# -----------------------------------------------------------------------------
+# Output values for the external stage example.
+# -----------------------------------------------------------------------------
+
 output "stage_names" {
   description = "The names of the created stages"
   value       = module.stage.stage_names

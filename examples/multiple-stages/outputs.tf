@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Multiple Stages Example - Outputs
+# -----------------------------------------------------------------------------
+# Output values for the multiple stages example.
+# -----------------------------------------------------------------------------
+
 output "stage_names" {
   description = "The names of the created stages"
   value       = module.stages.stage_names

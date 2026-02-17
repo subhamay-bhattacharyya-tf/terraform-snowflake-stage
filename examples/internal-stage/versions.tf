@@ -1,10 +1,16 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Internal Stage Example - Versions
+# -----------------------------------------------------------------------------
+# Terraform and provider version constraints for the internal stage example.
+# -----------------------------------------------------------------------------
+
 terraform {
   required_version = ">= 1.3.0"
 
   required_providers {
     snowflake = {
-      source  = "Snowflake-Labs/snowflake"
-      version = ">= 0.87.0"
+      source  = "snowflakedb/snowflake"
+      version = ">= 1.0.0"
     }
   }
 }
@@ -14,6 +20,6 @@ provider "snowflake" {
   account_name      = var.snowflake_account_name
   user              = var.snowflake_user
   role              = var.snowflake_role
-  authenticator     = "JWT"
+  authenticator     = "SNOWFLAKE_JWT"
   private_key       = var.snowflake_private_key
 }

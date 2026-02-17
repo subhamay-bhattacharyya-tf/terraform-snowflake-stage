@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - External Stage Example - Variables
+# -----------------------------------------------------------------------------
+# Input variables for the external stage example.
+# -----------------------------------------------------------------------------
+
 variable "stage_configs" {
   description = "Map of configuration objects for Snowflake stages"
   type = map(object({

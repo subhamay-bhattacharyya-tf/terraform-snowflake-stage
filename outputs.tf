@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Outputs
+# -----------------------------------------------------------------------------
+# Output values for the Snowflake stage module.
+# -----------------------------------------------------------------------------
+
 output "stage_names" {
   description = "The names of the created stages."
   value       = { for k, v in snowflake_stage.this : k => v.name }
