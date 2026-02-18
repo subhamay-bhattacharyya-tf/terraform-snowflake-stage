@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
-# Terraform Snowflake Stage Module - External Stage Example - Variables
+# Terraform Snowflake Stage Module - Multiple Stages Example - Variables
 # -----------------------------------------------------------------------------
-# Input variables for the external stage example.
+# Input variables for the multiple stages example.
 # -----------------------------------------------------------------------------
 
 variable "stage_configs" {
@@ -16,7 +16,13 @@ variable "stage_configs" {
     comment             = optional(string, null)
   }))
   default = {
-    "my_s3_stage" = {
+    "internal_stage" = {
+      name     = "MY_INTERNAL_STAGE"
+      database = "MY_DATABASE"
+      schema   = "PUBLIC"
+      comment  = "Internal stage for data loading"
+    }
+    "external_stage" = {
       name                = "MY_S3_STAGE"
       database            = "MY_DATABASE"
       schema              = "PUBLIC"

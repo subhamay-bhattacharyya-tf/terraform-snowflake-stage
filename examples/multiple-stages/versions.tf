@@ -1,7 +1,7 @@
 # -----------------------------------------------------------------------------
-# Terraform Snowflake Stage Module - Internal Stage Example - Versions
+# Terraform Snowflake Stage Module - Multiple Stages Example - Versions
 # -----------------------------------------------------------------------------
-# Terraform and provider version constraints for the internal stage example.
+# Terraform and provider version constraints for the multiple stages example.
 # -----------------------------------------------------------------------------
 
 terraform {

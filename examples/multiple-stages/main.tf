@@ -1,11 +1,11 @@
 # -----------------------------------------------------------------------------
-# Terraform Snowflake Stage Module - Internal Stage Example
+# Terraform Snowflake Stage Module - Multiple Stages Example
 # -----------------------------------------------------------------------------
 # This example demonstrates how to use the snowflake-stage module to create
-# internal Snowflake stages (Snowflake-managed storage).
+# multiple stages of different types (internal and external) in a single call.
 # -----------------------------------------------------------------------------
 
-module "stage" {
+module "stages" {
   source = "../../"
 
   stage_configs = var.stage_configs

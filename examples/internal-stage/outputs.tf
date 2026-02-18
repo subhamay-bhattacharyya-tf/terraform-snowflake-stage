@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Internal Stage Example - Outputs
+# -----------------------------------------------------------------------------
+# Output values for the internal stage example.
+# -----------------------------------------------------------------------------
+
 output "stage_names" {
   description = "The names of the created stages"
   value       = module.stage.stage_names
@@ -21,4 +27,9 @@ output "stage_schemas" {
 output "stage_types" {
   description = "The types of stages (INTERNAL or EXTERNAL)"
   value       = module.stage.stage_types
+}
+
+output "internal_stages" {
+  description = "All internal stage resources"
+  value       = module.stage.internal_stages
 }

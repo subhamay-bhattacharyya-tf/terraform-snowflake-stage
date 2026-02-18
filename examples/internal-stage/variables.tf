@@ -1,3 +1,9 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - Internal Stage Example - Variables
+# -----------------------------------------------------------------------------
+# Input variables for the internal stage example.
+# -----------------------------------------------------------------------------
+
 variable "stage_configs" {
   description = "Map of configuration objects for Snowflake stages"
   type = map(object({
@@ -6,44 +12,43 @@ variable "stage_configs" {
     schema              = string
     url                 = optional(string, null)
     storage_integration = optional(string, null)
-    credentials         = optional(string, null)
-    encryption          = optional(string, null)
-    file_format         = optional(string, null)
-    copy_options        = optional(string, null)
-    directory           = optional(string, null)
+    directory_enabled   = optional(bool, false)
     comment             = optional(string, null)
   }))
-  default = {}
+  default = {
+    "my_internal_stage" = {
+      name     = "MY_INTERNAL_STAGE"
+      database = "MY_DATABASE"
+      schema   = "PUBLIC"
+      comment  = "Internal stage for data loading"
+    }
+  }
 }
 
-# Snowflake authentication variables
+# Snowflake Provider Configuration Variables
 variable "snowflake_organization_name" {
   description = "Snowflake organization name"
   type        = string
-  default     = null
 }
 
 variable "snowflake_account_name" {
   description = "Snowflake account name"
   type        = string
-  default     = null
 }
 
 variable "snowflake_user" {
   description = "Snowflake username"
   type        = string
-  default     = null
 }
 
 variable "snowflake_role" {
   description = "Snowflake role"
   type        = string
-  default     = null
+  default     = "SYSADMIN"
 }
 
 variable "snowflake_private_key" {
   description = "Snowflake private key for key-pair authentication"
   type        = string
   sensitive   = true
-  default     = null
 }

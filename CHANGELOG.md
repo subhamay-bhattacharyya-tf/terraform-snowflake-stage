@@ -1,15 +1,38 @@
-# Changelog
-
-All notable changes to this project will be documented in this file.
-
-## 1.0.0 (2026-02-09)
-
-### Features
-
-* align provider configuration and enable preview features ([f27caac](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/commit/f27caac4b9202191697bccff8e2a38f65de86b50))
-* implement Snowflake stage module with internal and external stage support ([4eb6fe4](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/commit/4eb6fe4722b7e64571a7d097b501bf71909e8a48))
-
 ## [unreleased]
+
+### 🚀 Features
+
+- Convert to single-module repository layout for Snowflake stage
+- *(stages)* Separate internal and external stage resources
+- *(stages)* Add directory table support for internal and external stages
+
+### 🚜 Refactor
+
+- *(stages)* Consolidate internal and external stage resources
+- *(stages)* Remove unsupported credentials and encryption attributes
+
+### 📚 Documentation
+
+- *(readme)* Update custom endpoint badge URL
+- Update CHANGELOG.md [skip ci]
+- Update CHANGELOG.md [skip ci]
+- *(examples)* Mark stage outputs as sensitive
+- Update CHANGELOG.md [skip ci]
+- Update CHANGELOG.md [skip ci]
+- *(stages)* Remove unsupported cloud providers and simplify configuration
+- Update CHANGELOG.md [skip ci]
+- Update CHANGELOG.md [skip ci]
+
+### 🎨 Styling
+
+- *(examples)* Align Snowflake provider config and enable stage resource
+- *(examples)* Align Snowflake provider configuration formatting
+- *(examples)* Update preview features for separated stage resources
+
+### ⚙️ Miscellaneous Tasks
+
+- Upgrade Snowflake provider to 1.0.0 and standardize documentation
+## [1.0.0] - 2026-02-09
 
 ### 🚀 Features
 
@@ -19,3 +42,8 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Update CHANGELOG.md [skip ci]
+- Update CHANGELOG.md [skip ci]
+
+### ⚙️ Miscellaneous Tasks
+
+- *(release)* Version 1.0.0 [skip ci]

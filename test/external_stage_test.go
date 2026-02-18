@@ -13,42 +13,35 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-// TestExternalStage tests creating multiple stages (internal and external) via the module
+// TestExternalStage tests creating an external stage via the module
+// Note: This test requires a valid storage integration to be configured in Snowflake
 func TestExternalStage(t *testing.T) {
 	t.Parallel()
+
+	// Skip if no storage integration is configured
+	storageIntegration := os.Getenv("SNOWFLAKE_STORAGE_INTEGRATION")
+	s3Bucket := os.Getenv("SNOWFLAKE_TEST_S3_BUCKET")
+	if storageIntegration == "" || s3Bucket == "" {
+		t.Skip("Skipping external stage test: SNOWFLAKE_STORAGE_INTEGRATION and SNOWFLAKE_TEST_S3_BUCKET environment variables required")
+	}
 
 	retrySleep := 5 * time.Second
 	unique := strings.ToUpper(random.UniqueId())
 	dbName := fmt.Sprintf("TT_DB_%s", unique)
 	schemaName := "PUBLIC"
-
-	stage1Name := fmt.Sprintf("TT_INT_STAGE_%s", unique)
-	stage2Name := fmt.Sprintf("TT_EXT_STAGE_%s", unique)
+	stageName := fmt.Sprintf("TT_EXT_STAGE_%s", unique)
+	stageURL := fmt.Sprintf("s3://%s/test/%s/", s3Bucket, unique)
 
 	tfDir := "../examples/external-stage"
 
-	// Pre-create database for the test
-	db := openSnowflake(t)
-	createTestDatabase(t, db, dbName)
-	defer func() {
-		dropTestDatabase(t, db, dbName)
-		_ = db.Close()
-	}()
-
-	// Note: External stage with S3 URL requires storage integration or credentials
-	// For testing purposes, we create an internal stage and verify the module works
 	stageConfigs := map[string]interface{}{
-		"internal_stage": map[string]interface{}{
-			"name":     stage1Name,
-			"database": dbName,
-			"schema":   schemaName,
-			"comment":  "Terratest internal stage",
-		},
-		"external_stage": map[string]interface{}{
-			"name":     stage2Name,
-			"database": dbName,
-			"schema":   schemaName,
-			"comment":  "Terratest external stage placeholder",
+		"test_external_stage": map[string]interface{}{
+			"name":                stageName,
+			"database":            dbName,
+			"schema":              schemaName,
+			"url":                 stageURL,
+			"storage_integration": storageIntegration,
+			"comment":             "Terratest external stage test",
 		},
 	}
 
@@ -65,19 +58,27 @@ func TestExternalStage(t *testing.T) {
 		},
 	}
 
+	// Connect to Snowflake and create test database
+	db := openSnowflake(t)
+	defer func() { _ = db.Close() }()
+
+	createTestDatabase(t, db, dbName)
+	defer dropTestDatabase(t, db, dbName)
+
+	createTestSchema(t, db, dbName, schemaName)
+
 	defer terraform.Destroy(t, tfOptions)
 	terraform.InitAndApply(t, tfOptions)
 
 	time.Sleep(retrySleep)
 
-	// Verify both stages exist
-	for _, stageName := range []string{stage1Name, stage2Name} {
-		exists := stageExists(t, db, dbName, schemaName, stageName)
-		require.True(t, exists, "Expected stage %q to exist in Snowflake", stageName)
-	}
+	// Verify stage exists
+	exists := stageExists(t, db, dbName, schemaName, stageName)
+	require.True(t, exists, "Expected stage %q to exist in Snowflake", stageName)
 
-	// Verify properties of internal stage
-	props := fetchStageProps(t, db, dbName, schemaName, stage1Name)
-	require.Equal(t, stage1Name, props.Name)
-	require.Contains(t, props.Comment, "Terratest internal stage")
+	// Verify stage properties
+	props := fetchStageProps(t, db, dbName, schemaName, stageName)
+	require.Equal(t, stageName, props.Name)
+	require.Contains(t, props.URL, s3Bucket)
+	require.Contains(t, props.Comment, "Terratest external stage test")
 }

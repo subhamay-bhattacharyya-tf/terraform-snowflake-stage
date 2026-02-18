@@ -1,21 +1,19 @@
+# -----------------------------------------------------------------------------
+# Terraform Snowflake Stage Module - External Stage Example - Versions
+# -----------------------------------------------------------------------------
+# Terraform and provider version constraints for the external stage example.
+# -----------------------------------------------------------------------------
+
 terraform {
   required_version = ">= 1.3.0"
 
   required_providers {
     snowflake = {
-      source  = "Snowflake-Labs/snowflake"
-      version = ">= 0.87.0"
+      source  = "snowflakedb/snowflake"
+      version = ">= 1.0.0"
     }
   }
 }
-
-# Provider configuration using key-pair authentication
-# Required environment variables:
-#   SNOWFLAKE_ORGANIZATION_NAME - Snowflake organization name
-#   SNOWFLAKE_ACCOUNT_NAME      - Snowflake account name
-#   SNOWFLAKE_USER              - Snowflake username
-#   SNOWFLAKE_ROLE              - Snowflake role
-#   SNOWFLAKE_PRIVATE_KEY       - Snowflake private key (PEM format)
 
 provider "snowflake" {
   organization_name        = var.snowflake_organization_name
@@ -24,5 +22,5 @@ provider "snowflake" {
   role                     = var.snowflake_role
   authenticator            = "SNOWFLAKE_JWT"
   private_key              = var.snowflake_private_key
-  preview_features_enabled = ["snowflake_stage_resource"]
+  preview_features_enabled = ["snowflake_stage_internal_resource", "snowflake_stage_external_s3_resource"]
 }
