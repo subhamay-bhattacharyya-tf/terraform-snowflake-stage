@@ -1,3 +1,15 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.1.0](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/compare/v1.0.0...v1.1.0) (2026-02-18)
+
+### Features
+
+* convert to single-module repository layout for Snowflake stage ([4dafad8](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/commit/4dafad896ee512aa0b60d8babcb90f9298e47bbe))
+* **stages:** add directory table support for internal and external stages ([f2274c0](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/commit/f2274c049760b546dcac0c7fb9affe2d20530643))
+* **stages:** separate internal and external stage resources ([794fd09](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/commit/794fd09306c0ca6bbbfd120318275fa9a3c92b16))
+
 ## [unreleased]
 
 ### 🚀 Features
