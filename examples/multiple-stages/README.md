@@ -25,6 +25,12 @@ module "stages" {
       database = "MY_DATABASE"
       schema   = "PUBLIC"
       comment  = "Internal stage for data loading"
+      grants = [
+        {
+          role_name  = "DATA_ENGINEER"
+          privileges = ["READ", "WRITE"]
+        }
+      ]
     }
     
     # External stage
@@ -35,6 +41,16 @@ module "stages" {
       url                 = "s3://my-bucket/data/"
       storage_integration = "MY_S3_INTEGRATION"
       comment             = "External S3 stage for data ingestion"
+      grants = [
+        {
+          role_name  = "DATA_ENGINEER"
+          privileges = ["READ"]
+        },
+        {
+          role_name  = "DATA_ANALYST"
+          privileges = ["READ"]
+        }
+      ]
     }
   }
 }

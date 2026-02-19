@@ -6,10 +6,8 @@ This example demonstrates how to create external Snowflake stages using the snow
 
 External stages reference data files stored in external cloud storage locations:
 - AWS S3 (`s3://`)
-- Google Cloud Storage (`gcs://`)
-- Azure Blob Storage (`azure://`)
 
-External stages require either a storage integration or credentials for authentication.
+External stages require a storage integration for authentication.
 
 ## Usage
 
@@ -27,44 +25,16 @@ module "stage" {
       url                 = "s3://my-bucket/data/"
       storage_integration = "MY_S3_INTEGRATION"
       comment             = "External S3 stage"
-    }
-  }
-}
-```
-
-### GCS External Stage
-
-```hcl
-module "stage" {
-  source = "../../"
-
-  stage_configs = {
-    "gcs_stage" = {
-      name                = "MY_GCS_STAGE"
-      database            = "MY_DATABASE"
-      schema              = "PUBLIC"
-      url                 = "gcs://my-bucket/data/"
-      storage_integration = "MY_GCS_INTEGRATION"
-      comment             = "External GCS stage"
-    }
-  }
-}
-```
-
-### Azure External Stage
-
-```hcl
-module "stage" {
-  source = "../../"
-
-  stage_configs = {
-    "azure_stage" = {
-      name                = "MY_AZURE_STAGE"
-      database            = "MY_DATABASE"
-      schema              = "PUBLIC"
-      url                 = "azure://myaccount.blob.core.windows.net/container/path/"
-      storage_integration = "MY_AZURE_INTEGRATION"
-      comment             = "External Azure stage"
+      grants = [
+        {
+          role_name  = "DATA_ENGINEER"
+          privileges = ["READ", "WRITE"]
+        },
+        {
+          role_name  = "DATA_ANALYST"
+          privileges = ["READ"]
+        }
+      ]
     }
   }
 }

@@ -21,6 +21,12 @@ module "stage" {
       database = "MY_DATABASE"
       schema   = "PUBLIC"
       comment  = "Internal stage for raw data files"
+      grants = [
+        {
+          role_name  = "DATA_ENGINEER"
+          privileges = ["READ", "WRITE"]
+        }
+      ]
     }
   }
 }

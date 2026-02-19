@@ -54,3 +54,31 @@ resource "snowflake_stage_external_s3" "this" {
 
   comment = each.value.comment
 }
+
+# Grant privileges to account roles on stages
+resource "snowflake_grant_privileges_to_account_role" "stage_grants" {
+  for_each = {
+    for grant in flatten([
+      for stage_key, stage in var.stage_configs : [
+        for g in lookup(stage, "grants", []) : {
+          key        = "${stage_key}_${g.role_name}"
+          role_name  = g.role_name
+          privileges = g.privileges
+          database   = stage.database
+          schema     = stage.schema
+          name       = stage.name
+        }
+      ]
+    ]) : grant.key => grant
+  }
+
+  account_role_name = each.value.role_name
+  privileges        = each.value.privileges
+
+  on_schema_object {
+    object_type = "STAGE"
+    object_name = "\"${each.value.database}\".\"${each.value.schema}\".\"${each.value.name}\""
+  }
+
+  depends_on = [snowflake_stage_internal.this, snowflake_stage_external_s3.this]
+}
