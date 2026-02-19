@@ -14,6 +14,10 @@ variable "stage_configs" {
     storage_integration = optional(string, null)
     directory_enabled   = optional(bool, false)
     comment             = optional(string, null)
+    grants = optional(list(object({
+      role_name  = string
+      privileges = list(string)
+    })), [])
   }))
   default = {
     "my_internal_stage" = {

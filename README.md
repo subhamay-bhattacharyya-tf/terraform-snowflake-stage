@@ -126,6 +126,41 @@ module "stages" {
 | storage_integration | string | null | Storage integration name for external stages |
 | directory_enabled | bool | false | Enable directory table for the stage |
 | comment | string | null | Description of the stage |
+| grants | list(object) | [] | List of role grants for the stage |
+
+### grants Object Properties
+
+| Property | Type | Description |
+|----------|------|-------------|
+| role_name | string | Name of the account role to grant privileges to |
+| privileges | list(string) | List of privileges to grant (e.g., ["READ", "WRITE"]) |
+
+### Example with Grants
+
+```hcl
+module "stage" {
+  source = "github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage"
+
+  stage_configs = {
+    "my_stage" = {
+      name     = "MY_STAGE"
+      database = "MY_DATABASE"
+      schema   = "PUBLIC"
+      comment  = "Stage with role grants"
+      grants = [
+        {
+          role_name  = "DATA_ENGINEER"
+          privileges = ["READ", "WRITE"]
+        },
+        {
+          role_name  = "DATA_ANALYST"
+          privileges = ["READ"]
+        }
+      ]
+    }
+  }
+}
+```
 
 ### Stage Types
 

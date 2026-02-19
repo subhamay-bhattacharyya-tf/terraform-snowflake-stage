@@ -14,6 +14,10 @@ variable "stage_configs" {
     storage_integration = optional(string, null)
     directory_enabled   = optional(bool, false)
     comment             = optional(string, null)
+    grants = optional(list(object({
+      role_name  = string
+      privileges = list(string)
+    })), [])
   }))
   default = {
     "internal_stage" = {
@@ -21,6 +25,12 @@ variable "stage_configs" {
       database = "MY_DATABASE"
       schema   = "PUBLIC"
       comment  = "Internal stage for data loading"
+      grants = [
+        {
+          role_name  = "DATA_ENGINEER"
+          privileges = ["READ", "WRITE"]
+        }
+      ]
     }
     "external_stage" = {
       name                = "MY_S3_STAGE"
@@ -29,6 +39,16 @@ variable "stage_configs" {
       url                 = "s3://my-bucket/data/"
       storage_integration = "MY_S3_INTEGRATION"
       comment             = "External S3 stage for data ingestion"
+      grants = [
+        {
+          role_name  = "DATA_ENGINEER"
+          privileges = ["READ"]
+        },
+        {
+          role_name  = "DATA_ANALYST"
+          privileges = ["READ"]
+        }
+      ]
     }
   }
 }
