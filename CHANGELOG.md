@@ -1,3 +1,13 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+## [1.2.0](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/compare/v1.1.0...v1.2.0) (2026-02-19)
+
+### Features
+
+* add grants support and convert to single-module repository layout ([680e6e1](https://github.com/subhamay-bhattacharyya-tf/terraform-snowflake-stage/commit/680e6e14cf2bd594c22b163ad529dadde841ba23))
+
 ## [unreleased]
 
 ### 🚀 Features
